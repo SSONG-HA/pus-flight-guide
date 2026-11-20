@@ -71,11 +71,11 @@ button{font:inherit;color:inherit}
   background-position:calc(100% - 15px) 50%,calc(100% - 10px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:26px}
 .field input:focus,.field select:focus{outline:2px solid #a9c7ff;outline-offset:1px;border-color:#a9c7ff}
 .field input:disabled{color:var(--muted);background:#f2f5fa}
-.row{display:flex;align-items:center;gap:10px;margin-top:10px}
+.row{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
 .row--between{justify-content:space-between}
 .opts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
 .field--sm .field__label{font-size:11px}
-.field--sm select{padding:8px 22px 8px 9px;font-size:14px;font-weight:700}
+.field--sm select{padding:9px 22px 9px 9px;font-size:16px;font-weight:700}
 
 /* switch */
 .switch{display:inline-flex;align-items:center;gap:8px;background:none;border:0;padding:4px 2px;cursor:pointer}
@@ -120,7 +120,7 @@ button{font:inherit;color:inherit}
 .resultline strong{font-size:15px;font-weight:800;color:var(--accent)}
 .resultline .dot{color:#c2cfe0}
 .sortwrap{margin-left:auto}
-.sortwrap select{border:1px solid var(--line);background:#fff;border-radius:9px;padding:5px 8px;font-size:12px;font-weight:700;color:var(--ink-soft)}
+.sortwrap select{border:1px solid var(--line);background:#fff;border-radius:9px;padding:6px 8px;font-size:16px;font-weight:700;color:var(--ink-soft)}
 
 /* ── cards ──────────────────────────────── */
 .cards{display:grid;grid-template-columns:1fr;gap:10px}
@@ -250,8 +250,16 @@ button{font:inherit;color:inherit}
 .foot b{color:var(--ink-soft)}
 
 /* ── responsive ─────────────────────────── */
+@media (max-width:380px){
+  .field input[type=date]{font-size:13.5px;padding:9px 7px}
+  .field--sm select{font-size:14px}
+  .brand h1{font-size:15.5px}
+  .today{font-size:10.5px;padding:5px 7px}
+}
 @media (min-width:640px){
   body{font-size:15px}
+  .field--sm select{font-size:14px}
+  .sortwrap select{font-size:12px}
   .brand h1{font-size:19px}
   .panel{padding:18px}
   .dates{gap:12px}

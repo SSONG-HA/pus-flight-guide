@@ -107,7 +107,8 @@
             '<div class="card__name">' + r.name + '<span class="card__code">' + r.code + '</span></div>' +
             '<div class="card__country">' + r.country + ' · ' + r.regionName + '</div>' +
           '</div>' +
-          '<div class="card__price"><b>' + won(r.price) + '</b><span>참고 시세</span></div>' +
+          '<div class="card__price"><b>' + (r.price ? won(r.price) : '—') + '</b><span>' +
+            (r.price ? '참고 시세' : '시세 미확인') + '</span></div>' +
         '</div>' +
         '<div class="badges">' + directBadge +
           '<span class="badge">' + hoursText(r.hours) + (r.direct ? ' 직항' : ' 최단') + '</span>' +
@@ -239,7 +240,7 @@
   function renderZero() {
     elZero.innerHTML = DATA.zeroLeave.map(function (z) {
       return '<button type="button" class="zchip" data-start="' + z.start + '" data-end="' + z.end + '">' +
-        z.label + ' <b>' + md(z.start) + '–' + md(z.end) + '</b> · ' + z.nights + '박</button>';
+        z.label + ' <b>' + z.year + '.' + md(z.start) + '–' + md(z.end) + '</b> · ' + z.nights + '박</button>';
     }).join('');
   }
 
