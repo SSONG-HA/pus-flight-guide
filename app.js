@@ -229,7 +229,7 @@
       return '<article class="trip trip--' + t.leave + '">' +
         '<div class="trip__head"><div>' +
           '<div class="trip__when">' + mdwd(t.start) + ' → ' + mdwd(t.end) +
-            '<small>' + full(t.start).slice(0, 4) + '년</small></div>' +
+            ' <small>' + full(t.start).slice(0, 4) + '년</small></div>' +
           '<div class="trip__name">' + t.cluster + '</div>' +
         '</div><div class="leave"><b>' + t.leave + '일</b><span>연차</span></div></div>' +
         '<div class="trip__cities">' + cities + '</div>' + alt +
