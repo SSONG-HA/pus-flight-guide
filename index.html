@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="김해공항(PUS) 출발 항공권 조회와 목적지별 최적기, 4박5일 연휴 추천 일정을 한 화면에서.">
+<meta name="theme-color" content="#0d2b57">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PUS 항공권">
+<meta name="format-detection" content="telephone=no">
+<title>김해공항(PUS) 항공권 · 최적기 대시보드</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#routes">노선 목록으로 바로가기</a>
+
+<header class="top">
+  <div class="wrap top__inner">
+    <div class="brand">
+      <span class="brand__mark" aria-hidden="true">✈</span>
+      <div>
+        <h1>김해공항 <span class="code">PUS</span> 항공권</h1>
+        <p class="brand__sub">33개 노선 최적기 · 4박5일 연휴 가이드</p>
+      </div>
+    </div>
+    <div class="today" id="todayChip" aria-live="polite"></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ── 검색 조건 ─────────────────────────────── -->
+  <section class="panel" id="search" aria-labelledby="searchTitle">
+    <h2 class="sr-only" id="searchTitle">검색 조건</h2>
+
+    <div class="dates">
+      <label class="field">
+        <span class="field__label">출발일</span>
+        <input type="date" id="startDate" inputmode="numeric">
+      </label>
+      <div class="dates__arrow" aria-hidden="true">→</div>
+      <label class="field">
+        <span class="field__label">도착일 <em id="nightsLabel"></em></span>
+        <input type="date" id="endDate" inputmode="numeric">
+      </label>
+    </div>
+
+    <div class="row row--between">
+      <button type="button" class="switch" id="lock45" role="switch" aria-checked="true">
+        <span class="switch__track" aria-hidden="true"><span class="switch__dot"></span></span>
+        <span class="switch__text">4박5일 고정</span>
+      </button>
+      <div class="quick">
+        <button type="button" class="chip chip--ghost" data-shift="-1">← 하루</button>
+        <button type="button" class="chip chip--ghost" data-shift="1">하루 →</button>
+      </div>
+    </div>
+
+    <div class="opts">
+      <label class="field field--sm">
+        <span class="field__label">인원</span>
+        <select id="pax">
+          <option value="1">성인 1명</option>
+          <option value="2" selected>성인 2명</option>
+          <option value="3">성인 3명</option>
+          <option value="4">성인 4명</option>
+        </select>
+      </label>
+      <label class="field field--sm">
+        <span class="field__label">출발 시간</span>
+        <select id="depAfter">
+          <option value="0">제한 없음</option>
+          <option value="9">09시 이후</option>
+          <option value="11" selected>11시 이후</option>
+          <option value="13">13시 이후</option>
+          <option value="15">15시 이후</option>
+        </select>
+      </label>
+      <label class="field field--sm">
+        <span class="field__label">귀국 시간</span>
+        <select id="retBefore">
+          <option value="0">제한 없음</option>
+          <option value="16">16시 이전</option>
+          <option value="18">18시 이전</option>
+          <option value="20">20시 이전</option>
+          <option value="22" selected>22시 이전</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="presets">
+      <div class="presets__head">
+        <span class="section-label">황금연휴 4박5일</span>
+        <span class="hint">누르면 날짜가 바로 입력됩니다</span>
+      </div>
+      <div class="presets__scroll" id="presets" role="group" aria-label="연휴 프리셋"></div>
+    </div>
+  </section>
+
+  <!-- ── 필터 ─────────────────────────────────── -->
+  <section class="filterbar" aria-label="노선 필터">
+    <div class="segmented" id="regionFilter" role="tablist" aria-label="권역">
+      <button role="tab" data-region="all" aria-selected="true" class="on">전체</button>
+      <button role="tab" data-region="jp" aria-selected="false">일본·대만</button>
+      <button role="tab" data-region="sea" aria-selected="false">동남아</button>
+      <button role="tab" data-region="far" aria-selected="false">대양주·미주</button>
+    </div>
+    <div class="toggles">
+      <label class="check"><input type="checkbox" id="directOnly"><span>직항만</span></label>
+      <label class="check"><input type="checkbox" id="seasonBest"><span>이 시기 베스트만</span></label>
+    </div>
+  </section>
+
+  <div class="resultline">
+    <strong id="count">33</strong><span>개 노선</span>
+    <span class="dot">·</span>
+    <span id="condLine" class="muted"></span>
+    <label class="sortwrap">
+      <span class="sr-only">정렬</span>
+      <select id="sortBy">
+        <option value="fit">이 시기 적합도순</option>
+        <option value="price">가격 낮은순</option>
+        <option value="hour">비행시간 짧은순</option>
+        <option value="name">이름순</option>
+      </select>
+    </label>
+  </div>
+
+  <!-- ── 노선 카드 ─────────────────────────────── -->
+  <section id="routes" class="cards" aria-label="노선별 항공권" aria-live="polite"></section>
+
+  <!-- ── 최적기 표 ─────────────────────────────── -->
+  <section class="block" id="besttime" aria-labelledby="besttimeTitle">
+    <div class="block__head">
+      <h2 id="besttimeTitle">목적지별 최적기</h2>
+      <p class="hint">12개월 기후 데이터 · 진한 초록일수록 여행 적기, 붉을수록 피할 달</p>
+    </div>
+    <div class="tablewrap">
+      <table class="season" id="seasonTable">
+        <caption class="sr-only">목적지별 1~12월 여행 적합도</caption>
+      </table>
+    </div>
+    <p class="note">※ 기후 태그는 기존 시트(Config)의 월별 기후 데이터를 5점 척도로 환산한 것입니다. 비행시간·직항 여부·가격을 함께 반영한 순위는 위 카드 정렬에서 확인하세요.</p>
+  </section>
+
+  <!-- ── 연휴 추천 ─────────────────────────────── -->
+  <section class="block" id="holidays" aria-labelledby="holidaysTitle">
+    <div class="block__head">
+      <h2 id="holidaysTitle">4박5일 연휴 추천 일정</h2>
+      <p class="hint">2026년 12월 ~ 2027년 12월 공휴일·대체공휴일 기준 · 연차 2일 이내</p>
+    </div>
+    <div id="tripList" class="trips"></div>
+    <div class="zerobox">
+      <h3>연차 0일로 떠나는 짧은 여행</h3>
+      <p class="hint">4박5일은 연차 없이 불가능하지만, 아래 연휴는 연차 0일로 2~4일을 쓸 수 있습니다.</p>
+      <div class="zerobox__chips" id="zeroList"></div>
+    </div>
+    <details class="holidayAll">
+      <summary>2027년 공휴일·대체공휴일 전체 보기 (24일)</summary>
+      <ul id="holidayList" class="holidayall"></ul>
+    </details>
+  </section>
+
+  <section class="block block--tip" aria-labelledby="tipTitle">
+    <h2 id="tipTitle">이 대시보드 쓰는 법</h2>
+    <ol class="tiplist">
+      <li><b>날짜부터 고정</b> — 출발일만 골라도 도착일이 4박5일로 자동 맞춰집니다. 연휴 프리셋을 누르면 더 빠릅니다.</li>
+      <li><b>세 곳 가격 비교</b> — 각 카드의 <b>네이버</b>·<b>구글</b>·<b>스카이스캐너</b> 버튼이 같은 조건(노선·날짜·인원)의 검색 결과를 새 탭으로 엽니다.</li>
+      <li><b>시간 조건</b> — 출발·귀국 시간 조건은 사이트 안의 시간 필터에서 그대로 적용하면 됩니다(링크는 노선·날짜·인원만 지정).</li>
+      <li><b>최적기 확인</b> — 카드의 "이 시기" 배지와 아래 12개월 표로 우기·성수기를 피하세요.</li>
+    </ol>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p><b>김해공항(PUS) 항공권 · 최적기 대시보드</b> · 데이터 기준 2026-11-20</p>
+    <p class="muted">노선·기후 정보: 사용자 시트(33개 노선)와 공개 운항 스케줄. 공휴일: 「관공서의 공휴일에 관한 규정」·2027년 월력요항.
+      표시된 참고 시세는 과거 조회값이며 실제 가격은 링크에서 확인하세요. 이 페이지는 검색엔진에 노출되지 않으며 개인정보를 담지 않습니다.</p>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
